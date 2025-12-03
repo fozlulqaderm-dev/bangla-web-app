@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20 Second Video Record</title>
+</head>
+<body>
+    <video id="cameraFeed" autoplay></video>
+    <button id="startBtn">Start Recording (20s)</button>
+    <button id ="photoBtn">Take photo</button>
+    <canvas id="snapshot"style="display:none;"></canvas>
+
+    <script>
+        const video = document.getElementById('cameraFeed');
+        const startBtn = document.getElementById('startBtn');
+        const photoBtn = document.getElementById('photoBtn');
+        const canvas=document.getElementById('snapshot');
+        const context = canvas.getContext('2d');
+
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                video.srcObject = stream;
+
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = function(e) {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+
+                mediaRecorder.onstop = function() {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'recorded_video.webm';
+                    a.click();
+                };
+
+                startBtn.onclick = function() {
+                    recordedChunks = [];
+                    mediaRecorder.start();
+                    startBtn.disabled = true;
+                    setTimeout(() => {
+                        mediaRecorder.stop();
+                        startBtn.disabled = false;
+                    }, 20000); // 20 seconds = 20000 milliseconds
+                };
+                photoBtn.onclick=function(){
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video,0,0,canvas.width,canvas.height);
+                    const image = canvas.toDataURL('image/png');
+                    const a = document.createElement('a');
+                    a.href=image;
+                    a.download='photo.png'; 
+                            a.click();
+                };
+            })
+            .catch(error => {
+                console.error('camera access error:', error);
+            });
+    </script>
+</body>
+</html>

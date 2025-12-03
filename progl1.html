@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+
+  <title>Fozlul Qader</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background-color: #f2f2f2; }
+    #content { display: none; margin-top: 30px; }
+    input, button { padding: 10px; margin: 10px 0; width: 250px; }
+    table { margin: 20px auto; border-collapse: collapse; }
+    td, th { padding: 10px; border: 1px solid #999; }
+    img { display: block; margin: 20px auto; }
+    .center { text-align: center; }
+  </style>
+</head>
+<body>
+  <a href="https://fozlul.github.io/video-photo-app/photo.html"></a>
+  <div id="loginBox">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="your Name"><br>
+    <input type="password" id="password" placeholder="your Password"><br>
+    <button onclick="checkLogin()">login</button>
+    <p id="error" style="color:red;"></p>
+  </div>
+
+  <div id="content">
+    <button onclick=" logout()">logout</button>
+  
+    <h3 id="welcomeUser" class="center"></h3>
+    <img src="images1/html1.jfif" alt="Profile picture of Fozlul Qader" width="300" height="300">
+
+    <table width="800">
+      <tr>
+        <td class="center"><b><a href="Home.html">Home</a></b></td>
+        <td class="center"><b><a href="service.html">Service</a></b></td>
+        <td class="center"><b><a href="contact.html">Contact</a></b></td>
+        <td class="center"><b><a href="super power.html">Super Power</a></b></td>
+      </tr>
+    </table>
+
+    <p class="center" style="color:green; font-size:20px;"><b><u>Our Addresses</u></b></p>
+    <table width="808">
+      <tr>
+        <td style="color:red; font-size:18px;">Binari number</td>
+        <td style="color:brown; font-size:18px;">F131192M</td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <th><a href="progl4.html">Page 1</a></th>
+        <th><a href="progl3.html">Page 2</a></th>
+        <th><a href="progl2.html">Page 3</a></th>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    const correctUsername = "Fozlul Qader";
+    const correctPassword = "884285";
+
+    function checkLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (username === correctUsername && password === correctPassword) {
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("username", username);
+        showContent();
+      } else {
+        document.getElementById("error").innerText = "Incorrect username or password.";
+      }
+    }
+
+    function showContent() {
+      const user = localStorage.getItem("username") || "User";
+      document.getElementById("welcomeUser").innerText = `Welcome, ${user}!`;
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("content").style.display = "block";
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("username");
+      document.getElementById("content").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    window.onload = function() {
+      if (localStorage.getItem("loggedIn") === "true") {
+        showContent();
+      }
+    }
+  </script>
+
+</body>
+</html>
